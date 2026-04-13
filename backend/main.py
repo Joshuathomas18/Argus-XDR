@@ -12,7 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.core.config import get_settings
 from backend.core.database import close_connection
 from backend.rag.knowledge import build_knowledge_base
-from backend.api import routes_ingest, routes_threats
+from backend.api import routes_ingest, routes_threats, routes_agent
 
 
 # Configure logging
@@ -155,6 +155,7 @@ async def readiness_check():
 
 app.include_router(routes_ingest.router)
 app.include_router(routes_threats.router)
+app.include_router(routes_agent.router)
 
 
 # ============================================================================
@@ -211,6 +212,16 @@ async def root():
                 "patterns": "GET /api/threats/patterns/{threat_id}",
                 "graph": "GET /api/threats/graph/{entity_id}",
                 "entities": "GET /api/threats/entities",
+            },
+            "agent": {
+                "mitigate": "POST /api/agents/mitigate",
+                "explain": "POST /api/agents/explain",
+            },
+            "pathfinding": {
+                "routes": "POST /api/pathfinding/routes",
+                "shortest": "POST /api/pathfinding/shortest",
+                "chains": "POST /api/pathfinding/chains",
+                "stats": "GET /api/pathfinding/graph-stats",
             },
         },
     }
